@@ -17,7 +17,7 @@ public class ElasticSearchConfiguration
                 new HttpHost("localhost", 9200)).build();
         return restClient;
     }
-
+    
     @Bean
     public  ElasticsearchTransport getElasticsearchTransport() {
         return new RestClientTransport(
