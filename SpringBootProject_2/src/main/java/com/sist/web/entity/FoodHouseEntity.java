@@ -41,6 +41,7 @@ LIKECOUNT int
 HIT int 
 REPLYCOUNT int
  */
+// findByFno(int fno)
 @Entity(name = "food_house")
 @Data
 public class FoodHouseEntity {

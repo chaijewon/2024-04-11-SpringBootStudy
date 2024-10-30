@@ -10,7 +10,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-
+// DAO
 @Repository
 public class ElasticSearchQuery {
 
@@ -19,7 +19,7 @@ public class ElasticSearchQuery {
 
     private final String indexName = "product";
 
-
+    
     public String createOrUpdateDocument(Product product) throws IOException {
 
         IndexResponse response = elasticsearchClient.index(i -> i
