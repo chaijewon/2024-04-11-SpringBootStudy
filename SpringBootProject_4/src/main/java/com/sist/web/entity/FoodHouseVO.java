@@ -8,4 +8,6 @@ public interface FoodHouseVO {
    public int getJjimcount();
    public String getType();
    public double getScore();
+   public String getContent();
+   public String getTheme();
 }

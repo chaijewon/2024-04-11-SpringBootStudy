@@ -15,10 +15,22 @@ import com.sist.web.dao.*;
 public class FoodHouseRestController {
    @Autowired
    private FoodHouseDAO fDao;
+   
+   @Autowired
+   private RecipeDAO rDao;
+   
+   @Autowired
+   private ChefDAO cDao;
    // 자동 JSON변환 => Jackson => ObjectMapper 
    @GetMapping("food/main_react")
-   public List<FoodHouseVO> foodMainTopData(){
-	   List<FoodHouseVO> list=fDao.foodHitTop9();
-	   return list;
+   public Map foodMainTopData(){
+	   Map map=new HashMap();
+	   List<FoodHouseVO> fList=fDao.foodHitTop9();
+	   List<RecipeEntity> rList=rDao.recipeMainData();
+	   ChefEntitry vo=cDao.findByChef("핑콩이");
+	   map.put("fList", fList);
+	   map.put("rList", rList);
+	   map.put("cvo", vo);
+	   return map;
    }
 }
