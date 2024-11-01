@@ -19,7 +19,7 @@ public class ElasticSearchQuery {
 
     private final String indexName = "product";
 
-    
+    // save
     public String createOrUpdateDocument(Product product) throws IOException {
 
         IndexResponse response = elasticsearchClient.index(i -> i
@@ -34,7 +34,7 @@ public class ElasticSearchQuery {
         }
         return new StringBuilder("Error while performing the operation.").toString();
     }
-
+    // findById
     public Product getDocumentById(String productId) throws IOException{
         Product product = null;
         GetResponse<Product> response = elasticsearchClient.get(g -> g
@@ -52,7 +52,7 @@ public class ElasticSearchQuery {
 
        return product;
     }
-
+    // delete
     public String deleteDocumentById(String productId) throws IOException {
 
         DeleteRequest request = DeleteRequest.of(d -> d.index(indexName).id(productId));
