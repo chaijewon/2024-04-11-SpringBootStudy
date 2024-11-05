@@ -111,6 +111,61 @@ public class FoodHouseRestController {
     	}
     	return new ResponseEntity<>(map,HttpStatus.OK); // 200
     }
+    // /food/find/${curpage}/${address}
+    @GetMapping("food/find/{page}/{address}")
+    public ResponseEntity<Map> food_find(@PathVariable("page") int page,
+    		@PathVariable("address") String address)
+    {
+    	Map map=new HashMap();
+    	try
+    	{
+    		int rowSize=12;
+    		int start=(page-1)*rowSize;
+    		List<FoodHouseVO> fList=fDao.foodFindData(start, address);
+    		int totalpage=fDao.foodFindTotalPage(address);
+    		final int BLOCK=10;
+    		int startPage=((page-1)/BLOCK*BLOCK)+1;
+    		int endPage=((page-1)/BLOCK*BLOCK)+BLOCK;
+            if(endPage>totalpage)
+            	endPage=totalpage;
+            
+            map.put("fList", fList);
+            map.put("curpage", page);
+            map.put("totalpage", totalpage);
+            map.put("startPage", startPage);
+            map.put("endPage", endPage);
+    	}catch(Exception ex)
+    	{
+    		// {isLoading,isError,error,data}
+    		return new ResponseEntity<>(null,HttpStatus.INTERNAL_SERVER_ERROR);
+    		/*
+    		 *   *** 500 : 소스 에러 
+    		 *   *** 404 : 파일이 없는 경우
+    		 *   *** 400 : Bad Request => 데이터 전송이 틀린 경우 
+    		 *   415 : 한글 변환 
+    		 *   403 : 접근 거부 
+    		 */
+    	}
+    	return new ResponseEntity<>(map,HttpStatus.OK); // 정상 수행 => 200
+    }
+    @GetMapping("food/detail/{fno}")
+    public ResponseEntity<FoodHouseEntity> food_detail(@PathVariable("fno") int fno)
+    {
+    	FoodHouseEntity vo=new FoodHouseEntity();
+    	try
+    	{
+    		// 조회수 증가 
+    		vo=fDao.findByFno(fno);
+    		vo.setHit(vo.getHit()+1);
+    		fDao.save(vo);
+    		
+    		vo=fDao.findByFno(fno);
+    	}catch(Exception ex)
+    	{
+    		return new ResponseEntity<>(null,HttpStatus.INTERNAL_SERVER_ERROR);
+    	}
+    	return new ResponseEntity<>(vo,HttpStatus.OK);
+    }
     
     
 }
