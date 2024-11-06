@@ -7,11 +7,15 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.util.*;
 
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
+
+
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 import org.springframework.stereotype.Component;
 import com.sist.web.entity.*;
+
 @Component
 public class NewsSearchManager {
 
@@ -35,8 +39,8 @@ public class NewsSearchManager {
         }
 
 
-        String apiURL = "https://openapi.naver.com/v1/search/news.json?display=50&query=" + text;;    // JSON 결과
-        //String apiURL = "https://openapi.naver.com/v1/search/blog.xml?query="+ text; // XML 결과
+        //String apiURL = "https://openapi.naver.com/v1/search/news.json?display=50&query=" + text;;    // JSON 결과
+        String apiURL = "https://openapi.naver.com/v1/search/news.xml?display=50&query="+ text; // XML 결과
 
 
         Map<String, String> requestHeaders = new HashMap<>();
@@ -47,17 +51,21 @@ public class NewsSearchManager {
         
         try
         {
-        	JSONParser jp=new JSONParser();
-        	JSONObject root=(JSONObject)jp.parse(responseBody);
-        	JSONArray arr=(JSONArray)root.get("items");
-        	for(int i=0;i<arr.size();i++)
+        	Document doc=Jsoup.parse(responseBody);
+        	Elements title=doc.select("rss channel item title");
+        	Elements desc=doc.select("rss channel item description");
+        	//Elements link=doc.select("rss channel item link");
+        	
+        	for(int i=0;i<title.size();i++)
         	{
-        		JSONObject obj=(JSONObject)arr.get(i);
         		NewsVO vo=new NewsVO();
-        		vo.setTitle((String)obj.get("title"));
-        		vo.setLink((String)obj.get("link"));
-        		vo.setDesc((String)obj.get("description"));
+        		vo.setTitle(title.get(i).text());
+        		vo.setDesc(desc.get(i).text());
         		list.add(vo);
+        		//System.out.println(title.get(i).text());
+        		//System.out.println(desc.get(i).text());
+        		//System.out.println(link.get(i).text());
+        		//System.out.println("=================================");
         	}
         }catch(Exception ex) {}
         
