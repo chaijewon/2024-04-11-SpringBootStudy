@@ -44,7 +44,7 @@ public class BoardRestController {
 			   rb.setRegdate(day);
 		   }
 		   int totalpage=(int)(Math.ceil(bDao.count()/10.0));
-		   map.put("list", list);
+		   map.put("bList", list);
 		   map.put("curpage", page);
 		   map.put("totalpage", totalpage);
 		   map.put("today", new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
@@ -60,9 +60,11 @@ public class BoardRestController {
    @PostMapping("/board/insert")
    public ResponseEntity<Map> board_insert(@RequestBody ReactBoardEntity vo)
    {
+	   System.out.println(vo);
 	   Map map=new HashMap();
 	   try
 	   {
+		   vo.setHit(0);
 		   ReactBoardEntity _vo=bDao.save(vo);
 		   map.put("vo", _vo);
 		   map.put("msg", "yes");
@@ -139,6 +141,7 @@ public class BoardRestController {
    }
    // 삭제하기 ===> DeleteMapping
    // /board/delete/${no}/${pwd}
+   ///@GetMapping("/board/delete/{no}/{pwd}")
    @DeleteMapping("/board/delete/{no}/{pwd}")
    //-------------------------------------- Mutation
    public ResponseEntity<Map> board_delete(@PathVariable("no") int no,
